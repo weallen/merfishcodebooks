@@ -17,7 +17,7 @@ This repository ships:
 
 ## Credit
 
-This code accompanies, and is a port of the methodology described in:
+This is a Python port of the R reference code released with the paper:
 
 > **Boström J., Zapała M., Adameyko I.** *Boosting multiplexing capabilities
 > for error-robust spatial transcriptomic methods using a set exchange
@@ -43,8 +43,8 @@ algorithm follows the *iterative set-exchange* approach of Boström et al.
 (2025):
 
 1. **Seed** with a (`v`, `k`, `k-1`) covering design from the
-   [La Jolla covering repository](https://ljcr.dmgordon.org/) — or use a fresh
-   start, a custom CSV, or a punctured higher-`v` covering.
+   [La Jolla covering repository](https://ljcr.dmgordon.org/cover/table.html)
+   — or use a fresh start, a custom CSV, or a punctured higher-`v` covering.
 2. **Prune** any pairs that violate `min_hd` greedily.
 3. **Scavenge** missing codewords by repeated set exchanges between the kept
    blocks and the universe of weight-`k` words, until no further additions are
@@ -112,8 +112,15 @@ Run `merfish-codebook --help` for all options.
   fit comfortably.
 - `min_hd = 4` (the paper's main case) is currently supported in the pipeline;
   the pairwise-HD machinery is general.
-- La Jolla starts require network access to `ljcr.dmgordon.org` on first use;
-  results are cached on disk.
+- La Jolla starts: the package ships local copies of the
+  ([v∈5..70](src/merfish_codebooks/data/lajolla), k=4, t=3) and
+  (v∈7..49, k=6, t=5) covering designs from
+  [the La Jolla repository](https://ljcr.dmgordon.org/cover/table.html), so
+  HW=4 and HW=6 generation works fully offline. Out-of-range (`v`, `k`, `t`)
+  triples fall back to a network fetch (cached under
+  `~/.cache/merfish_codebooks/lajolla/`). Set `MERFISH_CODEBOOKS_OFFLINE=1`
+  to disallow network fetches. Refresh the bundled set with
+  `python scripts/fetch_lajolla_covers.py`.
 
 ## Precomputed codebooks
 
@@ -143,7 +150,8 @@ src/merfish_codebooks/
 ├── johnson.py     Johnson bound (theoretical max)
 ├── conversion.py  binary ↔ set ↔ bitmask
 ├── hd.py          vectorised pairwise Hamming distance
-├── lajolla.py     La Jolla covering repository fetcher with disk cache
+├── lajolla.py     La Jolla cover loader (bundled data → user cache → network)
+├── data/lajolla/  Bundled (v,k,t)-covering designs from ljcr.dmgordon.org
 ├── pruning.py     greedy minHD-violation pruning
 ├── exchange.py    iterative set-exchange loop (hot path)
 ├── sorter.py      post-hoc reorder by mutual HD

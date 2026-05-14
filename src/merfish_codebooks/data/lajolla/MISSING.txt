@@ -1,0 +1,6 @@
+(4, 4, 3)  https://ljcr.dmgordon.org/cover/show_cover.php?v=4&k=4&t=3
+(6, 6, 5)  https://ljcr.dmgordon.org/cover/show_cover.php?v=6&k=6&t=5
+(45, 6, 5)  https://ljcr.dmgordon.org/cover/show_cover.php?v=45&k=6&t=5
+(46, 6, 5)  https://ljcr.dmgordon.org/cover/show_cover.php?v=46&k=6&t=5
+(47, 6, 5)  https://ljcr.dmgordon.org/cover/show_cover.php?v=47&k=6&t=5
+(50, 6, 5)  https://ljcr.dmgordon.org/cover/show_cover.php?v=50&k=6&t=5

@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite the accompanying publication."
+message: "If you use this software, please cite the original publication describing the method (below)."
 title: "merfish_codebooks: iterative set-exchange codebook generator for MERFISH"
 type: software
 license: MIT

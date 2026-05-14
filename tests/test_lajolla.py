@@ -1,8 +1,11 @@
 """La Jolla parser tests using a small inlined HTML fixture (no network)."""
 
-import numpy as np
+import os
 
-from merfish_codebooks.lajolla import parse_lajolla_html
+import numpy as np
+import pytest
+
+from merfish_codebooks.lajolla import fetch_lajolla_cover, parse_lajolla_html
 
 
 _FIXTURE_HTML = """
@@ -37,3 +40,18 @@ def test_parse_known_block_values():
     cover = parse_lajolla_html(_FIXTURE_HTML, v=7, k=3, t=2)
     np.testing.assert_array_equal(cover.blocks[0], [1, 2, 3])
     np.testing.assert_array_equal(cover.blocks[-1], [3, 5, 6])
+
+
+@pytest.mark.parametrize("v,k,t,expected_blocks", [(40, 4, 3, 2470), (15, 6, 5, 578)])
+def test_bundled_cover_offline(monkeypatch, tmp_path, v, k, t, expected_blocks):
+    """Bundled covers must load with no network and without touching the user cache."""
+    monkeypatch.setenv("MERFISH_CODEBOOKS_OFFLINE", "1")
+    monkeypatch.setenv("MERFISH_CODEBOOKS_CACHE", str(tmp_path))
+    cover = fetch_lajolla_cover(v, k, t)
+    assert cover.v == v and cover.k == k and cover.t == t
+    assert cover.n_blocks == expected_blocks
+    assert cover.blocks.shape == (expected_blocks, k)
+    assert cover.blocks.min() >= 1 and cover.blocks.max() <= v
+    assert cover.method  # non-empty
+    # Bundled hit should not have written to the user cache.
+    assert not any(tmp_path.rglob("*.npz"))

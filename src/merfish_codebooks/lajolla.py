@@ -1,18 +1,28 @@
 """La Jolla Covering Repository fetcher.
 
-Port of `ImportStartingCodebook_LaJolla.R`. Fetches a (v, k, t)-covering design from
-https://ljcr.dmgordon.org/ and parses the t-tuple block out of the returned HTML.
+Port of `ImportStartingCodebook_LaJolla.R`. Returns a (v, k, t)-covering design
+sourced from the La Jolla Covering Repository — index at
+https://ljcr.dmgordon.org/cover/table.html, per-design pages at
+https://ljcr.dmgordon.org/cover/show_cover.php?v=V&k=K&t=T.
 
-Design files are cached on disk at `~/.cache/merfish_codebooks/lajolla/v{v}_k{k}_t{t}.npz`
-to avoid hammering the public server. Set environment variable
-``MERFISH_CODEBOOKS_OFFLINE=1`` to require cache hits.
+Lookup order:
+    1. Bundled package data under ``merfish_codebooks/data/lajolla/`` — ships
+       (k=4, t=3) covers for v∈[5, 70] and (k=6, t=5) covers for v∈[7, 49],
+       which are the only (k, t) pairs the codebook generator uses (t=k-1).
+       Refresh with ``scripts/fetch_lajolla_covers.py``.
+    2. User disk cache at ``~/.cache/merfish_codebooks/lajolla/`` (populated
+       by previous network fetches).
+    3. Network fetch from LJCR.
+
+Set ``MERFISH_CODEBOOKS_OFFLINE=1`` to skip the network fallback entirely.
 """
 
 from __future__ import annotations
 
-import io
+import gzip
 import os
 from dataclasses import dataclass
+from importlib import resources
 from pathlib import Path
 
 import numpy as np
@@ -22,6 +32,7 @@ from bs4 import BeautifulSoup
 
 _LJCR_URL = "https://ljcr.dmgordon.org/cover/show_cover.php"
 _DEFAULT_TIMEOUT = 30
+_BUNDLED_PKG = "merfish_codebooks.data.lajolla"
 
 
 def _cache_dir() -> Path:
@@ -110,8 +121,43 @@ def _write_cache(path: Path, cover: LaJollaCover) -> None:
     )
 
 
+def _load_bundled_cover(v: int, k: int, t: int) -> LaJollaCover | None:
+    """Return the bundled cover for (v, k, t), or None if we don't ship one."""
+    name = f"v{v:03d}_k{k}_t{t}.txt.gz"
+    try:
+        ref = resources.files(_BUNDLED_PKG).joinpath(name)
+    except (ModuleNotFoundError, FileNotFoundError):
+        return None
+    if not ref.is_file():
+        return None
+    with ref.open("rb") as raw, gzip.open(raw, "rt", encoding="utf-8") as f:
+        lines = f.read().splitlines()
+    method = ""
+    rows: list[list[int]] = []
+    for line in lines:
+        s = line.strip()
+        if not s:
+            continue
+        if s.startswith("#"):
+            tag, _, rest = s[1:].strip().partition(":")
+            if tag.strip().lower() == "method":
+                method = rest.strip()
+            continue
+        rows.append([int(p) for p in s.split()])
+    if not rows:
+        raise ValueError(f"Bundled cover {name} contains no blocks.")
+    blocks = np.asarray(rows, dtype=np.int64)
+    if blocks.shape[1] != k:
+        raise ValueError(f"Bundled cover {name} has width {blocks.shape[1]}, expected k={k}.")
+    return LaJollaCover(v=v, k=k, t=t, blocks=blocks, method=method)
+
+
 def fetch_lajolla_cover(v: int, k: int, t: int, *, timeout: float = _DEFAULT_TIMEOUT) -> LaJollaCover:
-    """Return a (v, k, t)-cover from the La Jolla repository (cached on disk)."""
+    """Return a (v, k, t)-cover. Prefers bundled data, then user cache, then network."""
+    bundled = _load_bundled_cover(v, k, t)
+    if bundled is not None:
+        return bundled
+
     cache_path = _cache_dir() / f"v{v}_k{k}_t{t}.npz"
     cached = _read_cache(cache_path)
     if cached is not None:
@@ -119,7 +165,7 @@ def fetch_lajolla_cover(v: int, k: int, t: int, *, timeout: float = _DEFAULT_TIM
 
     if _is_offline():
         raise RuntimeError(
-            f"No cached cover for (v={v}, k={k}, t={t}) and MERFISH_CODEBOOKS_OFFLINE=1."
+            f"No bundled or cached cover for (v={v}, k={k}, t={t}) and MERFISH_CODEBOOKS_OFFLINE=1."
         )
 
     params = {"v": v, "k": k, "t": t}
