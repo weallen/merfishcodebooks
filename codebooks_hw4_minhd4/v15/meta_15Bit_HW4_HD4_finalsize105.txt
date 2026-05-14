@@ -1,0 +1,14 @@
+Barcode Length                        15
+Hamming Weight                        4
+Minimum Hamming Distance              4
+Theoretical Max (Johnson Bound)       105
+StrategyUsed                          PunctureCoveringRange
+Final Codebook Size                   105
+Percentage Yield in %                 100.0
+Starting Code Method                  range puncture from v=16: Method of Construction: lex covering
+Pruning: Codes Removed                0
+Pruning: Codebook Size After Pruning  None
+Iterations Used                       0
+Timing: start_chosen_s                0.0023945409920997918
+Timing: after_pruning_s               0.002470458042807877
+Timing: total_s                       0.002470790990628302

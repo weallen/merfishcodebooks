@@ -1,0 +1,16 @@
+Barcode Length                        19
+Hamming Weight                        6
+Minimum Hamming Distance              4
+Theoretical Max (Johnson Bound)       1789
+StrategyUsed                          PunctureCoveringRange
+Final Codebook Size                   1519
+Percentage Yield in %                 84.9078
+Starting Code Method                  range puncture from v=20: Created by: Bertolo-Santisi
+Pruning: Codes Removed                461
+Pruning: Codebook Size After Pruning  1499
+Iterations Used                       2435
+Timing: start_chosen_s                2.6255722088972107
+Timing: after_pruning_s               2.988399124937132
+Timing: first_100_iter_s              0.2488600000506267
+Timing: last_improvement_s            4.69786058308091
+Timing: total_s                       8.888920541969128

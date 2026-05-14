@@ -1,0 +1,14 @@
+Barcode Length                        12
+Hamming Weight                        6
+Minimum Hamming Distance              4
+Theoretical Max (Johnson Bound)       132
+StrategyUsed                          PunctureCoveringRange
+Final Codebook Size                   132
+Percentage Yield in %                 100.0
+Starting Code Method                  range puncture from v=12: Method of Construction: simple construction: induced on c(13,7,6) covering
+Pruning: Codes Removed                0
+Pruning: Codebook Size After Pruning  None
+Iterations Used                       0
+Timing: start_chosen_s                0.00147387501783669
+Timing: after_pruning_s               0.001586833968758583
+Timing: total_s                       0.0015873339725658298

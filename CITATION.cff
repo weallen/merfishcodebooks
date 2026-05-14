@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the accompanying publication."
+title: "merfish_codebooks: iterative set-exchange codebook generator for MERFISH"
+type: software
+license: MIT
+repository-code: "https://github.com/AdameykoLab/merfish.codebooks"
+abstract: >-
+  Python (and R reference) implementation of the iterative set-exchange
+  algorithm for generating constant-weight binary codebooks at a target
+  minimum Hamming distance, used for error-robust spatial transcriptomic
+  methods such as MERFISH.
+preferred-citation:
+  type: article
+  title: "Boosting multiplexing capabilities for error-robust spatial transcriptomic methods using a set exchange approach"
+  journal: "Science Advances"
+  volume: 11
+  issue: 18
+  start: "eadr4026"
+  year: 2025
+  month: 5
+  day: 2
+  doi: "10.1126/sciadv.adr4026"
+  url: "https://www.science.org/doi/10.1126/sciadv.adr4026"
+  identifiers:
+    - type: doi
+      value: "10.1126/sciadv.adr4026"
+    - type: other
+      value: "PMID:40315316"
+    - type: other
+      value: "PMC:PMC12047430"
+  authors:
+    - family-names: "Boström"
+      given-names: "Johan"
+    - family-names: "Zapała"
+      given-names: "Michał"
+    - family-names: "Adameyko"
+      given-names: "Igor"

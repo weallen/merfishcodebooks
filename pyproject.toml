@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "merfish_codebooks"
+version = "0.1.0"
+description = "Generate large MERFISH codebooks at fixed Hamming weight and minimum Hamming distance."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Port of the R reference implementation by Boström, Zapała & Adameyko (Sci. Adv. 2025, DOI 10.1126/sciadv.adr4026)" },
+]
+urls = { "Publication" = "https://doi.org/10.1126/sciadv.adr4026", "Source" = "https://github.com/AdameykoLab/merfish.codebooks" }
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "numba>=0.58",
+    "requests>=2.28",
+    "beautifulsoup4>=4.11",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7",
+    "hypothesis>=6.80",
+]
+
+[project.scripts]
+merfish-codebook = "merfish_codebooks.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/merfish_codebooks"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

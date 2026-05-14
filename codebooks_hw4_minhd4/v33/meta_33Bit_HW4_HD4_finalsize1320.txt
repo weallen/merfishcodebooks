@@ -1,0 +1,14 @@
+Barcode Length                        33
+Hamming Weight                        4
+Minimum Hamming Distance              4
+Theoretical Max (Johnson Bound)       1320
+StrategyUsed                          PunctureCoveringRange
+Final Codebook Size                   1320
+Percentage Yield in %                 100.0
+Starting Code Method                  range puncture from v=34: Method of Construction: Steiner System (derived)
+Pruning: Codes Removed                0
+Pruning: Codebook Size After Pruning  None
+Iterations Used                       0
+Timing: start_chosen_s                0.06034516601357609
+Timing: after_pruning_s               0.07126387499738485
+Timing: total_s                       0.07126566604711115
